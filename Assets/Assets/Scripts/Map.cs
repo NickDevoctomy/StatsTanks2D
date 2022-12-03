@@ -6,9 +6,11 @@ public class Map : MonoBehaviour
 {
     public Texture2D MapTexture;
     public Material WallMaterial;
-    public float WallHeight = 1;
-    public float WallYOffset = 0;
+    public float CellHeight = 1;
+    public float CellYOffset = 0;
     public bool ForceRegeneration = true;
+
+    private readonly List<IGenerator> _generators = GeneratorUtility.CreateGenerators();
 
     void Start()
     {
@@ -22,15 +24,15 @@ public class Map : MonoBehaviour
 
     public void Generate()
     {
-        var walls = transform.Find("Walls");
-        if (walls == null || ForceRegeneration)
+        var cells = transform.Find("Cells");
+        if (cells == null || ForceRegeneration)
         {
-            if(walls != null)
+            if(cells != null)
             {
-                DestroyImmediate(walls.gameObject);
+                DestroyImmediate(cells.gameObject);
             }
 
-            GenerateWalls();
+            GenerateCells();
         }
 
         var floor = transform.Find("Floor");
@@ -45,29 +47,38 @@ public class Map : MonoBehaviour
         }
     }
 
-    private void GenerateWalls()
+    private void GenerateCells()
     {
-        var allWalls = new List<GameObject>();
+        var generatedByKey = new Dictionary<string, List<GameObject>>();
         var offset = new Vector2(-(MapTexture.width / 2), -(MapTexture.height / 2));
         for (int x = 0; x < MapTexture.width; x++)
         {
             for (int y = 0; y < MapTexture.height; y++)
             {
-                Color pixel = MapTexture.GetPixel(x, y);
-                var isWall = (pixel == Color.black);
-                if (isWall)
+                Color pixel = MapTexture.GetPixel(x, y);     
+                var generator = _generators.SingleOrDefault(x => x.IsApplicable(pixel));
+                if(generator != null)
                 {
-                    var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    wall.name = $"Wall({x},{y})";
-                    wall.transform.localScale = new Vector3(1, WallHeight, 1);
-                    wall.transform.position = new Vector3(offset.x + x, 0f + WallYOffset, offset.y + y);
-                    wall.transform.parent = transform;
-                    allWalls.Add(wall);
+                    var wall = generator.Generate(
+                        transform,
+                        new Vector2(x, y),
+                        offset,
+                        CellHeight,
+                        CellYOffset);
+
+                    if (!generatedByKey.ContainsKey(generator.Key))
+                    {
+                        generatedByKey.Add(generator.Key, new List<GameObject>());
+                    }
+
+                    generatedByKey[generator.Key].Add(wall);
                 }
             }
         }
 
-        MergeWalls(allWalls);
+        MergeCells(
+            "Walls",
+            generatedByKey["Wall"].ToList());    // Merge all groups?
     }
 
     private void GenerateFloor()
@@ -79,13 +90,14 @@ public class Map : MonoBehaviour
         floor.transform.parent = transform;
     }
 
-    private void MergeWalls(
-        List<GameObject> walls)
+    private void MergeCells(
+        string Name,
+        List<GameObject> cells)
     {
-        var combineInstances = walls.Select(x => CreateCombineInstanceFromGameObject(x)).ToArray();
-        walls.ForEach(x => DestroyImmediate(x));
+        var combineInstances = cells.Select(x => CreateCombineInstanceFromGameObject(x)).ToArray();
+        cells.ForEach(x => DestroyImmediate(x));
 
-        var wallsMesh = new GameObject("Walls");
+        var wallsMesh = new GameObject(Name);
         wallsMesh.transform.parent = transform;
         var meshRenderer = wallsMesh.AddComponent<MeshRenderer>();
         meshRenderer.material = WallMaterial;
