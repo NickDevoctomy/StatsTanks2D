@@ -6,7 +6,8 @@ public static class GeneratorUtility
     {
         return new List<IGenerator>
         {
-            new WallGenerator()
+            new WallGenerator(),
+            new SpawnGenerator()
         };
     }
 }

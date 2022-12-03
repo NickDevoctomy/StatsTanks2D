@@ -9,6 +9,7 @@ public class Map : MonoBehaviour
     public float CellHeight = 1;
     public float CellYOffset = 0;
     public bool ForceRegeneration = true;
+    public bool GenerateFloor = true;
 
     private readonly List<IGenerator> _generators = GeneratorUtility.CreateGenerators();
 
@@ -24,15 +25,28 @@ public class Map : MonoBehaviour
 
     public void Generate()
     {
-        var cells = transform.Find("Cells");
-        if (cells == null || ForceRegeneration)
-        {
-            if(cells != null)
-            {
-                DestroyImmediate(cells.gameObject);
-            }
+        //var cells = transform.Find("Cells");
+        //if (cells == null || ForceRegeneration)
+        //{
+        //    if(cells != null)
+        //    {
+        //        DestroyImmediate(cells.gameObject);
+        //    }
 
-            GenerateCells();
+        //    DoGenerateCells();
+        //}
+        foreach(var curGenerator in _generators)
+        {
+            var cellGroup = transform.Find(curGenerator.Key);
+            if (cellGroup == null || ForceRegeneration)
+            {
+                if (cellGroup != null)
+                {
+                    DestroyImmediate(cellGroup.gameObject);
+                }
+
+                DoGenerateCells(curGenerator);
+            }
         }
 
         var floor = transform.Find("Floor");
@@ -43,11 +57,14 @@ public class Map : MonoBehaviour
                 DestroyImmediate(floor.gameObject);
             }
 
-            GenerateFloor();
+            if (GenerateFloor)
+            {
+                DoGenerateFloor();
+            }
         }
     }
 
-    private void GenerateCells()
+    private void DoGenerateCells(IGenerator generator)
     {
         var generatedByKey = new Dictionary<string, List<GameObject>>();
         var offset = new Vector2(-(MapTexture.width / 2), -(MapTexture.height / 2));
@@ -56,10 +73,9 @@ public class Map : MonoBehaviour
             for (int y = 0; y < MapTexture.height; y++)
             {
                 Color pixel = MapTexture.GetPixel(x, y);     
-                var generator = _generators.SingleOrDefault(x => x.IsApplicable(pixel));
-                if(generator != null)
+                if(generator.IsApplicable(pixel))
                 {
-                    var wall = generator.Generate(
+                    var cell = generator.Generate(
                         transform,
                         new Vector2(x, y),
                         offset,
@@ -71,17 +87,20 @@ public class Map : MonoBehaviour
                         generatedByKey.Add(generator.Key, new List<GameObject>());
                     }
 
-                    generatedByKey[generator.Key].Add(wall);
+                    generatedByKey[generator.Key].Add(cell);
                 }
             }
         }
 
-        MergeCells(
-            "Walls",
-            generatedByKey["Wall"].ToList());    // Merge all groups?
+        foreach(var curCellGroup in generatedByKey.Keys)
+        {
+            MergeCells(
+                curCellGroup,
+                generatedByKey[curCellGroup].ToList());
+        }
     }
 
-    private void GenerateFloor()
+    private void DoGenerateFloor()
     {
         var floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
         floor.name = "Floor";
