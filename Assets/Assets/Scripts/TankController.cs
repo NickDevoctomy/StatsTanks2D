@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class TankController : MonoBehaviour
 {
@@ -39,18 +38,18 @@ public class TankController : MonoBehaviour
         }
 
         var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition = new Vector3(mousePosition.x, Turret.transform.position.y, mousePosition.z);
-        Turret.transform.LookAt(mousePosition, transform.up);
+        mousePosition = new Vector3(
+            mousePosition.x,
+            Turret.transform.position.y,
+            mousePosition.z);
+        Turret.transform.LookAt(
+            mousePosition,
+            transform.up);
     }
 
     void OnCollisionEnter(Collision collision)
     {
         _rigidBody.angularVelocity = Vector3.zero;
         _rigidBody.velocity = Vector3.zero;
-    }
-
-    float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
-    {
-        return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
     }
 }

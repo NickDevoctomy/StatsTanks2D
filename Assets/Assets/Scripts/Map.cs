@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,15 +9,33 @@ public class Map : MonoBehaviour
 
     void Start()
     {
+        if(transform.Find("Walls") == null)
+        {
+            GenerateWalls();
+        }
+
+        if(transform.Find("Floor") == null)
+        {
+            GenerateFloor();
+        }
+    }
+
+    void Update()
+    {
+        
+    }
+
+    private void GenerateWalls()
+    {
         var allWalls = new List<GameObject>();
-        var offset = new Vector2(-(MapTexture.width / 2),-(MapTexture.height / 2));
+        var offset = new Vector2(-(MapTexture.width / 2), -(MapTexture.height / 2));
         for (int x = 0; x < MapTexture.width; x++)
         {
             for (int y = 0; y < MapTexture.height; y++)
             {
                 Color pixel = MapTexture.GetPixel(x, y);
                 var isWall = (pixel == Color.black);
-                if(isWall)
+                if (isWall)
                 {
                     var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     wall.name = $"Wall({x},{y})";
@@ -30,18 +47,16 @@ public class Map : MonoBehaviour
             }
         }
 
+        MergeWalls(allWalls);
+    }
+
+    private void GenerateFloor()
+    {
         var floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
         floor.name = "Floor";
         floor.transform.localScale = new Vector3(MapTexture.width / 9, 1, MapTexture.height / 9);
         floor.transform.position = new Vector3(0, -0.5f, 0);
         floor.transform.parent = transform;
-
-        MergeWalls(allWalls);
-    }
-
-    void Update()
-    {
-        
     }
 
     private void MergeWalls(
@@ -55,8 +70,10 @@ public class Map : MonoBehaviour
         var meshRenderer = wallsMesh.AddComponent<MeshRenderer>();
         meshRenderer.material = WallMaterial;
         var meshFilter = wallsMesh.AddComponent<MeshFilter>();
-        meshFilter.mesh = new Mesh();
-        meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        meshFilter.mesh = new Mesh
+        {
+            indexFormat = UnityEngine.Rendering.IndexFormat.UInt32
+        };
         meshFilter.mesh.CombineMeshes(combineInstances);
         var meshCollider = wallsMesh.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = meshFilter.sharedMesh;
