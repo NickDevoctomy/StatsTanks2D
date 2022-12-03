@@ -23,12 +23,18 @@ public class Map : MonoBehaviour
                     var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     wall.name = $"Wall({x},{y})";
                     wall.transform.localScale = new Vector3(1, 1, 1);
-                    wall.transform.position = new Vector3(offset.x + x, offset.y + y, 0f);
+                    wall.transform.position = new Vector3(offset.x + x, 0f, offset.y + y);
                     wall.transform.parent = transform;
                     allWalls.Add(wall);
                 }
             }
         }
+
+        var floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        floor.name = "Floor";
+        floor.transform.localScale = new Vector3(MapTexture.width / 9, 1, MapTexture.height / 9);
+        floor.transform.position = new Vector3(0, -0.5f, 0);
+        floor.transform.parent = transform;
 
         MergeWalls(allWalls);
     }
