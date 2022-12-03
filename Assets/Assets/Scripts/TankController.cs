@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class TankController : MonoBehaviour
 {
@@ -15,16 +16,20 @@ public class TankController : MonoBehaviour
 
     void FixedUpdate()
     {
+        // This stops the tank quantum tunneling through walls
+        transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+        transform.position = new Vector3(transform.position.x, 0.28f, transform.position.z);
+
         var horizontalAxis = Input.GetAxis("Horizontal");
         if(horizontalAxis != 0)
         {
             var rotation = horizontalAxis * RotationSpeed;
             transform.Rotate(new Vector3(0f, rotation, 0f));
         }
-        else
-        {
-            _rigidBody.angularVelocity = Vector3.zero;
-        }
+        //else
+        //{
+        //    _rigidBody.angularVelocity = Vector3.zero;
+        //}
 
         var verticalAxis = Input.GetAxis("Vertical");
         if(verticalAxis != 0)
@@ -32,10 +37,10 @@ public class TankController : MonoBehaviour
             var movement = Time.deltaTime * (verticalAxis * MovementSpeed);
             transform.Translate(new Vector3(0f, 0f, movement));
         }
-        else
-        {
-            _rigidBody.velocity = Vector3.zero;
-        }
+        //else
+        //{
+        //    _rigidBody.velocity = Vector3.zero;
+        //}
 
         var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition = new Vector3(
@@ -54,7 +59,7 @@ public class TankController : MonoBehaviour
             return;
         }
 
-        _rigidBody.angularVelocity = Vector3.zero;
-        _rigidBody.velocity = Vector3.zero;
+        //_rigidBody.angularVelocity = Vector3.zero;
+        //_rigidBody.velocity = Vector3.zero;
     }
 }
