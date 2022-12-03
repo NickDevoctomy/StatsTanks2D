@@ -6,6 +6,9 @@ public class Map : MonoBehaviour
 {
     public Texture2D MapTexture;
     public Material WallMaterial;
+    public float WallHeight = 1;
+    public float WallYOffset = 0;
+    public bool ForceRegeneration = true;
 
     void Start()
     {
@@ -19,13 +22,25 @@ public class Map : MonoBehaviour
 
     public void Generate()
     {
-        if (transform.Find("Walls") == null)
+        var walls = transform.Find("Walls");
+        if (walls == null || ForceRegeneration)
         {
+            if(walls != null)
+            {
+                DestroyImmediate(walls.gameObject);
+            }
+
             GenerateWalls();
         }
 
-        if (transform.Find("Floor") == null)
+        var floor = transform.Find("Floor");
+        if (floor == null || ForceRegeneration)
         {
+            if(floor != null)
+            {
+                DestroyImmediate(floor.gameObject);
+            }
+
             GenerateFloor();
         }
     }
@@ -44,8 +59,8 @@ public class Map : MonoBehaviour
                 {
                     var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     wall.name = $"Wall({x},{y})";
-                    wall.transform.localScale = new Vector3(1, 1, 1);
-                    wall.transform.position = new Vector3(offset.x + x, 0f, offset.y + y);
+                    wall.transform.localScale = new Vector3(1, WallHeight, 1);
+                    wall.transform.position = new Vector3(offset.x + x, 0f + WallYOffset, offset.y + y);
                     wall.transform.parent = transform;
                     allWalls.Add(wall);
                 }
