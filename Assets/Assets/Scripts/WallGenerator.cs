@@ -10,12 +10,12 @@ public class WallGenerator : IGenerator
         float ceilingHeight,
         float yOffset)
     {
-        var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        wall.name = $"{Key}({position.x},{position.y})";
-        wall.transform.localScale = new Vector3(1, ceilingHeight, 1);
-        wall.transform.position = new Vector3(offset.x + position.x, 0f + yOffset, offset.y + position.y);
-        wall.transform.parent = parent;
-        return wall;
+        var cell = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        cell.name = $"{Key}({position.x},{position.y})";
+        cell.transform.localScale = new Vector3(1, ceilingHeight, 1);
+        cell.transform.position = new Vector3(offset.x + position.x, 0f + yOffset, offset.y + position.y);
+        cell.transform.parent = parent;
+        return cell;
     }
 
     public bool IsApplicable(Color color)
