@@ -49,6 +49,11 @@ public class TankController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if(_rigidBody == null)
+        {
+            return;
+        }
+
         _rigidBody.angularVelocity = Vector3.zero;
         _rigidBody.velocity = Vector3.zero;
     }

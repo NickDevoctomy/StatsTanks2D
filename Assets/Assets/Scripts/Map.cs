@@ -9,20 +9,25 @@ public class Map : MonoBehaviour
 
     void Start()
     {
-        if(transform.Find("Walls") == null)
-        {
-            GenerateWalls();
-        }
-
-        if(transform.Find("Floor") == null)
-        {
-            GenerateFloor();
-        }
+        Generate();
     }
 
     void Update()
     {
         
+    }
+
+    public void Generate()
+    {
+        if (transform.Find("Walls") == null)
+        {
+            GenerateWalls();
+        }
+
+        if (transform.Find("Floor") == null)
+        {
+            GenerateFloor();
+        }
     }
 
     private void GenerateWalls()
@@ -70,11 +75,11 @@ public class Map : MonoBehaviour
         var meshRenderer = wallsMesh.AddComponent<MeshRenderer>();
         meshRenderer.material = WallMaterial;
         var meshFilter = wallsMesh.AddComponent<MeshFilter>();
-        meshFilter.mesh = new Mesh
+        meshFilter.sharedMesh = new Mesh
         {
             indexFormat = UnityEngine.Rendering.IndexFormat.UInt32
         };
-        meshFilter.mesh.CombineMeshes(combineInstances);
+        meshFilter.sharedMesh.CombineMeshes(combineInstances);
         var meshCollider = wallsMesh.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = meshFilter.sharedMesh;
         wallsMesh.SetActive(true);
