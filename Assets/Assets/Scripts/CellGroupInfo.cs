@@ -9,4 +9,5 @@ public struct CellGroupInfo
     public Material Material;
     public float YOffset;
     public bool Merge;
+    public bool IncludeNavMeshSurface;
 }

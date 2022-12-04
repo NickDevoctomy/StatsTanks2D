@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public class Map : MonoBehaviour
@@ -75,7 +76,8 @@ public class Map : MonoBehaviour
                 cellGroupInfo.Key,
                 generated,
                 cellGroupInfo.Material,
-                generated[0].tag);
+                generated[0].tag,
+                cellGroupInfo.IncludeNavMeshSurface);
         }
         else
         {
@@ -93,7 +95,8 @@ public class Map : MonoBehaviour
         string Name,
         List<GameObject> cells,
         Material material,
-        string tag)
+        string tag,
+        bool includeNavMeshSurface)
     {
         var combineInstances = cells.Select(x => CreateCombineInstanceFromGameObject(x)).ToArray();
         cells.ForEach(x => DestroyImmediate(x));
@@ -111,6 +114,13 @@ public class Map : MonoBehaviour
         var meshCollider = combined.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = meshFilter.sharedMesh;
         combined.tag = tag;
+
+        if(includeNavMeshSurface)
+        {
+            var navMeshSurface = combined.AddComponent<NavMeshSurface>();
+            navMeshSurface.BuildNavMesh();
+        }
+
         combined.SetActive(true);
     }
 
