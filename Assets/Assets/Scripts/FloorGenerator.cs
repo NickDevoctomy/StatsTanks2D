@@ -22,6 +22,7 @@ public class FloorGenerator : IGenerator
 
     public bool IsApplicable(Color color)
     {
-        return color == Color.white;
+        return color == Color.white ||
+            color == Color.green;
     }
 }

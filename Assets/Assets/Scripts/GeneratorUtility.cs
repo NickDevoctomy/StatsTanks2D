@@ -8,7 +8,8 @@ public static class GeneratorUtility
         {
             new WallGenerator(),
             new SpawnGenerator(),
-            new FloorGenerator()
+            new FloorGenerator(),
+            new GlassRoofedGenerator()
         };
     }
 }

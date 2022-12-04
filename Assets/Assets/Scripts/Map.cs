@@ -42,6 +42,11 @@ public class Map : MonoBehaviour
     private void DoGenerateCells(IGenerator generator)
     {
         var cellGroupInfo = CellGroups.SingleOrDefault(x => x.Key == generator.Key);
+        if(!cellGroupInfo.Enabled)
+        {
+            return;
+        }
+
         var generated = new List<GameObject>();
         var offset = new Vector2(-(MapTexture.width / 2), -(MapTexture.height / 2));
         for (int x = 0; x < MapTexture.width; x++)
