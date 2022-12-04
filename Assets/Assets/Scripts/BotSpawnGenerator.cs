@@ -29,6 +29,7 @@ public class BotSpawnGenerator : IGenerator
         spawnPoint.transform.parent = cell.transform;
         spawnPoint.transform.localPosition = new Vector3(0f, 10f, 0f);
         spawnPoint.tag = "BotSpawnPoint";
+
         return cell;
     }
 

@@ -117,8 +117,21 @@ public class Map : MonoBehaviour
 
         if(includeNavMeshSurface)
         {
+            Debug.Log($"Creating navigation mesh on {Name}");
             var navMeshSurface = combined.AddComponent<NavMeshSurface>();
+
+            Debug.Log($"Building navigation mesh");
             navMeshSurface.BuildNavMesh();
+
+            Debug.Log($"Spawning bots");
+            BotSpawner.Instance.Spawn();
+
+            Debug.Log($"Repositioning all bots onto navigation mesh");
+            BotSpawner.Instance.Bots.ForEach(x =>
+            {
+                var bot = x.GetComponent<Bot>();
+                bot.PositionOnNavMesh();
+            });
         }
 
         combined.SetActive(true);
