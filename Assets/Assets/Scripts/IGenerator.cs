@@ -9,5 +9,6 @@ public interface IGenerator
         Vector2 position,
         Vector2 offset,
         float ceilingHeight,
-        float yOffset);
+        float yOffset,
+        Material material);
 }

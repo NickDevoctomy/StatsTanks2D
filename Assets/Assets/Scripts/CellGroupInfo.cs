@@ -7,4 +7,5 @@ public struct CellGroupInfo
     public string Key;
     public Material Material;
     public float YOffset;
+    public bool Merge;
 }

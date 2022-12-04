@@ -7,10 +7,13 @@ public class TankController : MonoBehaviour
     public float MovementSpeed = 8f;
 
     private Rigidbody _rigidBody;
+    private GameObject[] _spawnPoints;
 
     void Start()
     {
         _rigidBody = GetComponent<Rigidbody>();
+        _spawnPoints = GameObject.FindGameObjectsWithTag("PlayerSpawnPoint");
+        MoveToRandomSpawnPoint();
     }
 
     void FixedUpdate()
@@ -50,5 +53,11 @@ public class TankController : MonoBehaviour
         }
 
         // Take damage here
+    }
+
+    private void MoveToRandomSpawnPoint()
+    {
+        var randomSpawnPointIndex = Random.Range(0, _spawnPoints.Length - 1);
+        transform.position = _spawnPoints[randomSpawnPointIndex].transform.position;
     }
 }

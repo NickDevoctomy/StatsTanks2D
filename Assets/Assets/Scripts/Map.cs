@@ -42,7 +42,7 @@ public class Map : MonoBehaviour
     private void DoGenerateCells(IGenerator generator)
     {
         var cellGroupInfo = CellGroups.SingleOrDefault(x => x.Key == generator.Key);
-        var generatedByKey = new Dictionary<string, List<GameObject>>();
+        var generated = new List<GameObject>();
         var offset = new Vector2(-(MapTexture.width / 2), -(MapTexture.height / 2));
         for (int x = 0; x < MapTexture.width; x++)
         {
@@ -56,24 +56,30 @@ public class Map : MonoBehaviour
                         new Vector2(x, y),
                         offset,
                         CellHeight,
-                        cellGroupInfo.YOffset);
+                        cellGroupInfo.YOffset,
+                        cellGroupInfo.Material);
 
-                    if (!generatedByKey.ContainsKey(generator.Key))
-                    {
-                        generatedByKey.Add(generator.Key, new List<GameObject>());
-                    }
-
-                    generatedByKey[generator.Key].Add(cell);
+                    generated.Add(cell);
                 }
             }
         }
 
-        foreach(var curCellGroup in generatedByKey.Keys)
+        if(cellGroupInfo.Merge)
         {
             MergeCells(
-                curCellGroup,
-                generatedByKey[curCellGroup].ToList(),
+                cellGroupInfo.Key,
+                generated,
                 cellGroupInfo.Material);
+        }
+        else
+        {
+            var group = new GameObject(cellGroupInfo.Key);
+            group.transform.parent = transform;
+            group.SetActive(true);
+            generated.ForEach(x =>
+            {
+                x.transform.parent = group.transform;
+            });
         }
     }
 

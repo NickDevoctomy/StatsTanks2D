@@ -8,7 +8,8 @@ public class WallGenerator : IGenerator
         Vector2 position,
         Vector2 offset,
         float ceilingHeight,
-        float yOffset)
+        float yOffset,
+        Material material)
     {
         var cell = GameObject.CreatePrimitive(PrimitiveType.Cube);
         cell.name = $"{Key}({position.x},{position.y})";
