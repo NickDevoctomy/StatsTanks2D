@@ -17,7 +17,6 @@ public class TankController : MonoBehaviour
     {
         // This stops the tank quantum tunneling through walls
         transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
-        transform.position = new Vector3(transform.position.x, 0.28f, transform.position.z);
 
         var horizontalAxis = Input.GetAxis("Horizontal");
         if(horizontalAxis != 0)
