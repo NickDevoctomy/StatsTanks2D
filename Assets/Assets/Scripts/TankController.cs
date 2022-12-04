@@ -8,11 +8,13 @@ public class TankController : MonoBehaviour
 
     private Rigidbody _rigidBody;
     private GameObject[] _spawnPoints;
+    private Transform _cameraPivot;
 
     void Start()
     {
         _rigidBody = GetComponent<Rigidbody>();
         _spawnPoints = GameObject.FindGameObjectsWithTag("PlayerSpawnPoint");
+        _cameraPivot = transform.Find("CameraPivot");
         MoveToRandomSpawnPoint();
     }
 
@@ -46,6 +48,16 @@ public class TankController : MonoBehaviour
                     cameraRayHit.point.z);
                 Turret.transform.LookAt(targetPosition);
             }
+        }
+
+        if(Input.GetKey(KeyCode.PageUp))
+        {
+            _cameraPivot.Rotate(Vector3.right * 15f * Time.deltaTime);
+        }
+
+        if (Input.GetKey(KeyCode.PageDown))
+        {
+            _cameraPivot.Rotate(-Vector3.right * 15f * Time.deltaTime);
         }
     }
 
