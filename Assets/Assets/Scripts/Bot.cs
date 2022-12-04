@@ -19,6 +19,8 @@ public class Bot : MonoBehaviour
             500f,
             NavMesh.AllAreas))
         {
+            var navMeshAgent = GetComponent<NavMeshAgent>();
+            Debug.Log($"Positioning agent {navMeshAgent.agentTypeID}");
             transform.position = closestHit.position;
         }
     }
