@@ -74,7 +74,8 @@ public class Map : MonoBehaviour
             MergeCells(
                 cellGroupInfo.Key,
                 generated,
-                cellGroupInfo.Material);
+                cellGroupInfo.Material,
+                generated[0].tag);
         }
         else
         {
@@ -91,24 +92,26 @@ public class Map : MonoBehaviour
     private void MergeCells(
         string Name,
         List<GameObject> cells,
-        Material material)
+        Material material,
+        string tag)
     {
         var combineInstances = cells.Select(x => CreateCombineInstanceFromGameObject(x)).ToArray();
         cells.ForEach(x => DestroyImmediate(x));
 
-        var wallsMesh = new GameObject(Name);
-        wallsMesh.transform.parent = transform;
-        var meshRenderer = wallsMesh.AddComponent<MeshRenderer>();
+        var combined = new GameObject(Name);
+        combined.transform.parent = transform;
+        var meshRenderer = combined.AddComponent<MeshRenderer>();
         meshRenderer.material = material;
-        var meshFilter = wallsMesh.AddComponent<MeshFilter>();
+        var meshFilter = combined.AddComponent<MeshFilter>();
         meshFilter.sharedMesh = new Mesh
         {
             indexFormat = UnityEngine.Rendering.IndexFormat.UInt32
         };
         meshFilter.sharedMesh.CombineMeshes(combineInstances);
-        var meshCollider = wallsMesh.AddComponent<MeshCollider>();
+        var meshCollider = combined.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = meshFilter.sharedMesh;
-        wallsMesh.SetActive(true);
+        combined.tag = tag;
+        combined.SetActive(true);
     }
 
     private CombineInstance CreateCombineInstanceFromGameObject(GameObject gameObject)

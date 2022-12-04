@@ -35,14 +35,18 @@ public class TankController : MonoBehaviour
             transform.Translate(new Vector3(0f, 0f, movement));
         }
 
-        var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition = new Vector3(
-            mousePosition.x,
-            Turret.transform.position.y,
-            mousePosition.z);
-        Turret.transform.LookAt(
-            mousePosition,
-            transform.up);
+        var cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(cameraRay, out var cameraRayHit))
+        {
+            if (cameraRayHit.transform.tag == "Floor")
+            {
+                var targetPosition = new Vector3(
+                    cameraRayHit.point.x,
+                    Turret.transform.position.y,
+                    cameraRayHit.point.z);
+                Turret.transform.LookAt(targetPosition);
+            }
+        }
     }
 
     void OnCollisionEnter(Collision collision)

@@ -17,6 +17,7 @@ public class FloorGenerator : IGenerator
         cell.transform.localScale = new Vector3(1f, 0.1f, 1f);
         cell.transform.position = new Vector3(offset.x + position.x, 0f + yOffset, offset.y + position.y);
         cell.transform.parent = parent;
+        cell.tag = "Floor";
         return cell;
     }
 
