@@ -30,6 +30,7 @@ public class BotSpawner : MonoBehaviour
             BotPrefab,
             _spawnPoints[randomSpawnPointIndex].transform.position,
             Quaternion.identity);
+        botObject.transform.SetParent(transform);
         Bots.Add(botObject);
     }
 }

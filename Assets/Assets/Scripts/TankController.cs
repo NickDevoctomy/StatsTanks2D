@@ -1,4 +1,6 @@
+using System.IO;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class TankController : MonoBehaviour
 {
@@ -47,6 +49,16 @@ public class TankController : MonoBehaviour
                     Turret.transform.position.y,
                     cameraRayHit.point.z);
                 Turret.transform.LookAt(targetPosition);
+
+                if(Input.GetMouseButton(0))
+                {
+                    var botObject = GameObject.FindGameObjectWithTag("Bot");
+                    if(botObject != null)
+                    {
+                        var bot = botObject.GetComponent<Bot>();
+                        bot.CalculatePath(targetPosition);
+                    }
+                }
             }
         }
 
