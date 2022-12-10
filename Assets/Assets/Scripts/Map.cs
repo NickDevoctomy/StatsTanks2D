@@ -110,7 +110,7 @@ public class Map : MonoBehaviour
         {
             indexFormat = UnityEngine.Rendering.IndexFormat.UInt32
         };
-        meshFilter.sharedMesh.CombineMeshes(combineInstances);
+        meshFilter.sharedMesh.CombineMeshes(combineInstances, true);
         var meshCollider = combined.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = meshFilter.sharedMesh;
         combined.tag = tag;

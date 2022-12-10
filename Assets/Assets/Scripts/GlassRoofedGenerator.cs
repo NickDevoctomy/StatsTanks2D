@@ -12,9 +12,9 @@ public class GlassRoofedGenerator : IGenerator
         float yOffset,
         Material material)
     {
-        var cell = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        var cell = GameObject.CreatePrimitive(PrimitiveType.Plane);
         cell.name = $"{Key}({position.x},{position.y})";
-        cell.transform.localScale = new Vector3(1f, 0.1f, 1f);
+        cell.transform.localScale = new Vector3(0.1f, 1f, 0.1f);
         cell.transform.position = new Vector3(offset.x + position.x, 0f + yOffset, offset.y + position.y);
         cell.transform.parent = parent;
         return cell;
