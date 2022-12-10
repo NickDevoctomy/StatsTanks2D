@@ -7,6 +7,7 @@ public class TankController : MonoBehaviour
     public GameObject Turret;
     public float RotationSpeed = 2f;
     public float MovementSpeed = 8f;
+    public float StartingCameraPivot = 0f;
 
     private Rigidbody _rigidBody;
     private GameObject[] _spawnPoints;
@@ -17,6 +18,7 @@ public class TankController : MonoBehaviour
         _rigidBody = GetComponent<Rigidbody>();
         _spawnPoints = GameObject.FindGameObjectsWithTag("PlayerSpawnPoint");
         _cameraPivot = transform.Find("CameraPivot");
+        _cameraPivot.rotation = Quaternion.Euler(StartingCameraPivot, 0, 0);
         MoveToRandomSpawnPoint();
     }
 

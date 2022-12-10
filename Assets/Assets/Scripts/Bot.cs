@@ -1,7 +1,5 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
 
 public class Bot : MonoBehaviour
 {
@@ -63,30 +61,17 @@ public class Bot : MonoBehaviour
     {
         if (_navMeshAgent?.path != null)
         {
+            Gizmos.color = Color.green;
             for (int i = 0; i < _navMeshAgent.path.corners.Length - 1; i++)
             {
                 var curCorner = new Vector3(_navMeshAgent.path.corners[i].x, transform.position.y, _navMeshAgent.path.corners[i].z);
                 var nextCorner = new Vector3(_navMeshAgent.path.corners[i+1].x, transform.position.y, _navMeshAgent.path.corners[i+1].z);
-
-                Gizmos.color = Vector3.Distance(transform.position, nextCorner) > 5f ? Color.red : Color.green;
                 Gizmos.DrawSphere(nextCorner, 0.5f);
-                Gizmos.color = Color.red;
                 Gizmos.DrawLine(
                     curCorner,
                     nextCorner);
             }
-
-            if (_forceSharpTurn)
-            {
-                Gizmos.color = Color.cyan;
-                Gizmos.DrawSphere(_turnTarget, 0.6f);
-            }
         }
-
-        var forwardVector = transform.position + transform.forward * 2;
-        Gizmos.DrawLine(
-            transform.position,
-            forwardVector);
     }
 
     private float GetAngleToNext(Vector3? nextCorner, out Vector3 usedNextCorner)

@@ -51,6 +51,7 @@ MonoBehaviour:
   Turret: {fileID: 4873224279041716734}
   RotationSpeed: 2
   MovementSpeed: 8
+  StartingCameraPivot: 0
 --- !u!54 &4694115570352010307
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -79,7 +80,7 @@ NavMeshObstacle:
   m_Shape: 1
   m_Extents: {x: 0.965, y: 0.95, z: 1.45}
   m_MoveThreshold: 0.1
-  m_Carve: 0
+  m_Carve: 1
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0.19, z: 0.1}
   m_TimeToStationary: 0.5
