@@ -98,15 +98,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Samples:
-  - Key: Engine
+  - Enabled: 1
+    Key: Engine
     AudioClip: {fileID: 8300000, guid: b08d76460a6e1b84eb4c70c4b8a5c5f9, type: 3}
+    MixerGroup: {fileID: -8752731786531800141, guid: 69f71f2e30f7fed47bc5367626145ff0, type: 2}
     Loop: 1
     AttackTime: 0.1
     ReleaseTime: 0.5
-  - Key: Turret
+  - Enabled: 1
+    Key: Turret
     AudioClip: {fileID: 8300000, guid: 6b05935d992cc76479a532274b15524d, type: 3}
+    MixerGroup: {fileID: -8752731786531800141, guid: 69f71f2e30f7fed47bc5367626145ff0, type: 2}
     Loop: 1
     AttackTime: 0.1
+    ReleaseTime: 0.5
+  - Enabled: 1
+    Key: EngineIdle
+    AudioClip: {fileID: 8300000, guid: e182a999563118946ac85bbdafa15e86, type: 3}
+    MixerGroup: {fileID: -8752731786531800141, guid: 69f71f2e30f7fed47bc5367626145ff0, type: 2}
+    Loop: 1
+    AttackTime: 0.5
     ReleaseTime: 0.5
 --- !u!1 &4694115570497278668
 GameObject:

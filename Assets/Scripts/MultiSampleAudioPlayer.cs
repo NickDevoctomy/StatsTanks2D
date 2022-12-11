@@ -21,10 +21,11 @@ public class MultiSampleAudioPlayer : MonoBehaviour
             var audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.clip = curSample.AudioClip;
             audioSource.loop = curSample.Loop;
+            audioSource.outputAudioMixerGroup = curSample.MixerGroup;
             var context = new MultiSampleContext
             {
                 Info = curSample,
-                AudioSource = audioSource
+                AudioSource = audioSource,
             };
 
             _contexts.Add(curSample.Key, context);
@@ -41,6 +42,11 @@ public class MultiSampleAudioPlayer : MonoBehaviour
         }
 
         var context = _contexts[key];
+        if(!context.Info.Enabled)
+        {
+            return;
+        }
+
         var audioSource = context.AudioSource;
 
         if (active)

@@ -36,6 +36,7 @@ public class TankController : MonoBehaviour
         var horizontalAxisRaw = Input.GetAxisRaw("Horizontal");
         bool hasAxisInput = verticalAxisRaw != 0 || horizontalAxisRaw != 0;
         _audioPlayer.PlayWithAttackAndRelease("Engine", hasAxisInput);
+        _audioPlayer.PlayWithAttackAndRelease("EngineIdle", !hasAxisInput);
 
         DoTurretMovement();
         DoCameraPivot();
