@@ -12,17 +12,12 @@ public class TankController : MonoBehaviour
     private Rigidbody _rigidBody;
     private GameObject[] _spawnPoints;
     private Transform _cameraPivot;
-    private AudioSource _engineAudioSource;
-    private AudioSource _turretAudioSource;
-    private float _currentEngineAudioTime = 0f;
-    private float _currentTurretAudioTime = 0f;
-    private bool _fadeOut;
+    private MultiSampleAudioPlayer _audioPlayer;
 
     void Start()
     {
         _rigidBody = GetComponent<Rigidbody>();
-        _engineAudioSource = GetComponent<AudioSource>();
-        _turretAudioSource = Turret.GetComponent<AudioSource>();
+        _audioPlayer = GetComponent<MultiSampleAudioPlayer>();
 
         _spawnPoints = GameObject.FindGameObjectsWithTag("PlayerSpawnPoint");
         _cameraPivot = transform.Find("CameraPivot");
@@ -40,7 +35,7 @@ public class TankController : MonoBehaviour
         var verticalAxisRaw = Input.GetAxisRaw("Vertical");
         var horizontalAxisRaw = Input.GetAxisRaw("Horizontal");
         bool hasAxisInput = verticalAxisRaw != 0 || horizontalAxisRaw != 0;
-        AttackDecaySound(_engineAudioSource, hasAxisInput, ref _currentEngineAudioTime);
+        _audioPlayer.PlayWithAttackAndRelease("Engine", hasAxisInput);
 
         DoTurretMovement();
         DoCameraPivot();
@@ -70,50 +65,6 @@ public class TankController : MonoBehaviour
         {
             var movement = Time.deltaTime * (verticalAxis * MovementSpeed);
             transform.Translate(new Vector3(0f, 0f, movement));
-        }
-    }
-
-    private void AttackDecaySound(AudioSource audioSource, bool active, ref float currentTime)
-    {
-        if (active)
-        {
-            if (!audioSource.isPlaying)
-            {
-                audioSource.volume = 0f;
-                currentTime = 0f;
-                audioSource.Play();
-            }
-            else
-            {
-                _fadeOut = false;
-                currentTime += Time.deltaTime;
-                var newVolume = currentTime / 0.1f;
-                audioSource.volume = newVolume;
-            }
-        }
-        else
-        {
-            if (!_fadeOut &&
-                audioSource.isPlaying)
-            {
-                currentTime = 0f;
-                _fadeOut = true;
-            }
-
-            if (_fadeOut)
-            {
-                currentTime += Time.deltaTime;
-                var newVolume = currentTime / 0.5f;
-                audioSource.volume = 1.0f - newVolume;
-
-                if (currentTime >= 0.5f)
-                {
-                    audioSource.Stop();
-                    audioSource.volume = 0f;
-                    currentTime = 0f;
-                    _fadeOut = false;
-                }
-            }
         }
     }
 
@@ -163,7 +114,7 @@ public class TankController : MonoBehaviour
             }
         }
 
-        AttackDecaySound(_turretAudioSource, moved, ref _currentTurretAudioTime);
+        _audioPlayer.PlayWithAttackAndRelease("Turret", moved);
     }
 
     private void MoveToRandomSpawnPoint()
