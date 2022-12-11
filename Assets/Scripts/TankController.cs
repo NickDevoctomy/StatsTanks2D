@@ -5,6 +5,8 @@ using UnityEngine.AI;
 public class TankController : MonoBehaviour
 {
     public GameObject Turret;
+    public GameObject[] LeftWheels;
+    public GameObject[] RightWheels;
     public float RotationSpeed = 2f;
     public float MovementSpeed = 8f;
     public float StartingCameraPivot = 0f;
@@ -59,6 +61,14 @@ public class TankController : MonoBehaviour
         {
             var rotation = horizontalAxis * RotationSpeed;
             transform.Rotate(new Vector3(0f, rotation, 0f));
+            if(horizontalAxis > 0)
+            {
+                RotateRightWheels("Horizontal");
+            }
+            else
+            {
+                RotateLeftWheels("Horizontal");
+            }
         }
 
         var verticalAxis = Input.GetAxis("Vertical");
@@ -66,8 +76,26 @@ public class TankController : MonoBehaviour
         {
             var movement = Time.deltaTime * (verticalAxis * MovementSpeed);
             transform.Translate(new Vector3(0f, 0f, movement));
+            RotateLeftWheels("Vertical");
+            RotateRightWheels("Vertical");
         }
     }
+
+    private void RotateLeftWheels(string axis)
+    {
+        foreach (var curWheel in LeftWheels)
+        {
+            curWheel.transform.Rotate(Input.GetAxis(axis) * 5.0f, 0.0f, 0.0f);
+        }
+    }
+    private void RotateRightWheels(string axis)
+    {
+        foreach (var curWheel in RightWheels)
+        {
+            curWheel.transform.Rotate(Input.GetAxis(axis) * 5.0f, 0.0f, 0.0f);
+        }
+    }
+
 
     private void DoCameraPivot()
     {
