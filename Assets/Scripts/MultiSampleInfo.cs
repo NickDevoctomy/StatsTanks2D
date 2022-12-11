@@ -12,4 +12,6 @@ public struct MultiSampleInfo
     public bool Loop;
     public float AttackTime;
     public float ReleaseTime;
+    public float MinDistance;
+    public float MaxDistance;
 }

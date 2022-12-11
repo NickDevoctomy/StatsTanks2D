@@ -78,7 +78,7 @@ public class Bot : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (_navMeshAgent?.path != null)
+        if (_navMeshAgent != null && _navMeshAgent?.path != null)
         {
             Gizmos.color = Color.green;
             for (int i = 0; i < _navMeshAgent.path.corners.Length - 1; i++)

@@ -112,6 +112,8 @@ MonoBehaviour:
     Loop: 1
     AttackTime: 0.1
     ReleaseTime: 0.5
+    MinDistance: 1
+    MaxDistance: 20
   - Enabled: 1
     Key: Turret
     AudioClip: {fileID: 8300000, guid: 6b05935d992cc76479a532274b15524d, type: 3}
@@ -119,6 +121,8 @@ MonoBehaviour:
     Loop: 1
     AttackTime: 0.1
     ReleaseTime: 0.5
+    MinDistance: 1
+    MaxDistance: 20
   - Enabled: 1
     Key: EngineIdle
     AudioClip: {fileID: 8300000, guid: e182a999563118946ac85bbdafa15e86, type: 3}
@@ -126,6 +130,8 @@ MonoBehaviour:
     Loop: 1
     AttackTime: 0.5
     ReleaseTime: 0.5
+    MinDistance: 1
+    MaxDistance: 20
 --- !u!1001 &4694115570259093132
 PrefabInstance:
   m_ObjectHideFlags: 0

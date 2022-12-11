@@ -22,6 +22,11 @@ public class MultiSampleAudioPlayer : MonoBehaviour
             audioSource.clip = curSample.AudioClip;
             audioSource.loop = curSample.Loop;
             audioSource.outputAudioMixerGroup = curSample.MixerGroup;
+            audioSource.minDistance = curSample.MinDistance;
+            audioSource.maxDistance = curSample.MaxDistance;
+            audioSource.dopplerLevel = 0.25f;
+            audioSource.spatialBlend = 1f;
+            audioSource.spatialize = true;
             var context = new MultiSampleContext
             {
                 Info = curSample,
