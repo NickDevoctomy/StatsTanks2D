@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 4694115570352010304}
   - component: {fileID: 4694115570352010307}
   - component: {fileID: 2719637925696018327}
-  - component: {fileID: 3436544145499996992}
   - component: {fileID: 3787256702861835785}
+  - component: {fileID: 6794440122202487326}
+  - component: {fileID: 388332178158270403}
   m_Layer: 0
   m_Name: Bot
   m_TagString: Bot
@@ -74,24 +75,6 @@ NavMeshAgent:
   m_BaseOffset: 0.785
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &3436544145499996992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4694115570352010335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 544ab74f1793e8741aef630d6da0a77a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LeftWheels:
-  - {fileID: 7928391976519299121}
-  - {fileID: 5927223073327303031}
-  RightWheels:
-  - {fileID: 3011413843572774511}
-  - {fileID: 788011530129032572}
 --- !u!114 &3787256702861835785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,6 +115,39 @@ MonoBehaviour:
     ReleaseTime: 0.5
     MinDistance: 1
     MaxDistance: 20
+--- !u!114 &6794440122202487326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4694115570352010335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fb3f82580e1ac942beadd91386c6af8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Turret: {fileID: 4873224279041716734}
+  LeftWheels:
+  - {fileID: 7928391976519299121}
+  - {fileID: 5927223073327303031}
+  RightWheels:
+  - {fileID: 3011413843572774511}
+  - {fileID: 788011530129032572}
+  RotationSpeed: 2
+  MovementSpeed: 8
+--- !u!114 &388332178158270403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4694115570352010335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1dbe60fd6a8211418fc2539a9ac3eac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4694115570259093132
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -223,6 +239,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6901132729350649733, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6901132729350649733, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 5.35436e-24
+      objectReference: {fileID: 0}
+    - target: {fileID: 6901132729350649733, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.00000008744342
+      objectReference: {fileID: 0}
+    - target: {fileID: 6901132729350649733, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -3.8222734e-15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
 --- !u!1 &788011530129032572 stripped
@@ -233,6 +265,11 @@ GameObject:
 --- !u!1 &3011413843572774511 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7561097175505383651, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
+  m_PrefabInstance: {fileID: 4694115570259093132}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4873224279041716734 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 181818077799470962, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
   m_PrefabInstance: {fileID: 4694115570259093132}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5219934752128230750 stripped

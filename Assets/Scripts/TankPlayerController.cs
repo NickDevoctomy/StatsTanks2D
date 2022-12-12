@@ -1,16 +1,14 @@
-using System.IO;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class TankController : MonoBehaviour
+public class TankPlayerController : MonoBehaviour
 {
     public GameObject Turret;
     public GameObject[] LeftWheels;
     public GameObject[] RightWheels;
-    public float RotationSpeed = 2f;
     public float MovementSpeed = 8f;
     public float StartingCameraPivot = 0f;
 
+    private TankMover _tankMover;
     private Rigidbody _rigidBody;
     private GameObject[] _spawnPoints;
     private Transform _cameraPivot;
@@ -18,6 +16,7 @@ public class TankController : MonoBehaviour
 
     void Start()
     {
+        _tankMover = GetComponent<TankMover>();
         _rigidBody = GetComponent<Rigidbody>();
         _audioPlayer = GetComponent<MultiSampleAudioPlayer>();
 
@@ -29,17 +28,8 @@ public class TankController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // This stops the tank quantum tunneling through walls
-        transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
-
         DoMovement();
-
-        var verticalAxisRaw = Input.GetAxisRaw("Vertical");
-        var horizontalAxisRaw = Input.GetAxisRaw("Horizontal");
-        bool hasAxisInput = verticalAxisRaw != 0 || horizontalAxisRaw != 0;
-        _audioPlayer.PlayWithAttackAndRelease("Engine", hasAxisInput);
-        _audioPlayer.PlayWithAttackAndRelease("EngineIdle", !hasAxisInput);
-
+        PlayeEngineSounds();
         DoTurretMovement();
         DoCameraPivot();
     }
@@ -54,48 +44,21 @@ public class TankController : MonoBehaviour
         // Take damage here
     }
 
+    private void PlayeEngineSounds()
+    {
+        var verticalAxisRaw = Input.GetAxisRaw("Vertical");
+        var horizontalAxisRaw = Input.GetAxisRaw("Horizontal");
+        bool hasAxisInput = verticalAxisRaw != 0 || horizontalAxisRaw != 0;
+        _audioPlayer.PlayWithAttackAndRelease("Engine", hasAxisInput);
+        _audioPlayer.PlayWithAttackAndRelease("EngineIdle", !hasAxisInput);
+    }
+
     private void DoMovement()
     {
-        var horizontalAxis = Input.GetAxis("Horizontal");
-        if (horizontalAxis != 0)
-        {
-            var rotation = horizontalAxis * RotationSpeed;
-            transform.Rotate(new Vector3(0f, rotation, 0f));
-            if(horizontalAxis > 0)
-            {
-                RotateRightWheels("Horizontal");
-            }
-            else
-            {
-                RotateLeftWheels("Horizontal");
-            }
-        }
-
-        var verticalAxis = Input.GetAxis("Vertical");
-        if (verticalAxis != 0)
-        {
-            var movement = Time.deltaTime * (verticalAxis * MovementSpeed);
-            transform.Translate(new Vector3(0f, 0f, movement));
-            RotateLeftWheels("Vertical");
-            RotateRightWheels("Vertical");
-        }
+        _tankMover.ForceLevel();
+        _tankMover.ProcessHorizontalAxisInput();
+        _tankMover.ProcessVericalAxisInput();
     }
-
-    private void RotateLeftWheels(string axis)
-    {
-        foreach (var curWheel in LeftWheels)
-        {
-            curWheel.transform.Rotate(Input.GetAxis(axis) * 5.0f, 0.0f, 0.0f);
-        }
-    }
-    private void RotateRightWheels(string axis)
-    {
-        foreach (var curWheel in RightWheels)
-        {
-            curWheel.transform.Rotate(Input.GetAxis(axis) * 5.0f, 0.0f, 0.0f);
-        }
-    }
-
 
     private void DoCameraPivot()
     {
@@ -136,7 +99,7 @@ public class TankController : MonoBehaviour
                     var botObject = GameObject.FindGameObjectWithTag("Bot");
                     if (botObject != null)
                     {
-                        var bot = botObject.GetComponent<Bot>();
+                        var bot = botObject.GetComponent<TankBotController>();
                         bot.CalculatePath(targetPosition);
                     }
                 }

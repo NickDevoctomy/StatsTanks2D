@@ -132,7 +132,7 @@ public class Map : MonoBehaviour
                 Debug.Log($"Repositioning all bots onto navigation mesh");
                 BotSpawner.Instance.Bots.ForEach(x =>
                 {
-                    var bot = x.GetComponent<Bot>();
+                    var bot = x.GetComponent<TankBotController>();
                     bot.PositionOnNavMesh();
                 });
             }

@@ -9637,6 +9637,7 @@ GameObject:
   - component: {fileID: 4694115570352010307}
   - component: {fileID: 134099099817245881}
   - component: {fileID: 5096545898298656978}
+  - component: {fileID: 9203805092767568158}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -9757,6 +9758,28 @@ MonoBehaviour:
     ReleaseTime: 0.5
     MinDistance: 1
     MaxDistance: 20
+--- !u!114 &9203805092767568158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4694115570352010335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fb3f82580e1ac942beadd91386c6af8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Turret: {fileID: 4873224279041716734}
+  LeftWheels:
+  - {fileID: 7928391976519299121}
+  - {fileID: 5927223073327303031}
+  RightWheels:
+  - {fileID: 3011413843572774511}
+  - {fileID: 788011530129032572}
+  DesiredYRotation: 0
+  DesiredLocation: {x: 0, y: 0, z: 0}
+  RotationSpeed: 2
 --- !u!1 &4694115570497278668
 GameObject:
   m_ObjectHideFlags: 0

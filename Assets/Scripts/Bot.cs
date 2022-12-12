@@ -3,9 +3,6 @@ using UnityEngine.AI;
 
 public class Bot : MonoBehaviour
 {
-    public GameObject[] LeftWheels;
-    public GameObject[] RightWheels;
-
     private NavMeshAgent _navMeshAgent;
     private Rigidbody _rigidBody;
     private MultiSampleAudioPlayer _audioPlayer;
@@ -70,8 +67,6 @@ public class Bot : MonoBehaviour
 
         float velocity = _navMeshAgent.velocity.magnitude / _navMeshAgent.speed;
         var isMoving = velocity > 0.1f;
-        RotateLeftWheels(velocity);
-        RotateRightWheels(velocity);
         _audioPlayer.PlayWithAttackAndRelease("Engine", isMoving);
         _audioPlayer.PlayWithAttackAndRelease("EngineIdle", !isMoving);
     }
@@ -90,21 +85,6 @@ public class Bot : MonoBehaviour
                     curCorner,
                     nextCorner);
             }
-        }
-    }
-
-    private void RotateLeftWheels(float axisValue)
-    {
-        foreach (var curWheel in LeftWheels)
-        {
-            curWheel.transform.Rotate(axisValue * 2.0f, 0.0f, 0.0f);
-        }
-    }
-    private void RotateRightWheels(float axisValue)
-    {
-        foreach (var curWheel in RightWheels)
-        {
-            curWheel.transform.Rotate(axisValue * 2.0f, 0.0f, 0.0f);
         }
     }
 
