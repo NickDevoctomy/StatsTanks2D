@@ -56,8 +56,12 @@ public class TankPlayerController : MonoBehaviour
     private void DoMovement()
     {
         _tankMover.ForceLevel();
-        _tankMover.ProcessHorizontalAxisInput();
-        _tankMover.ProcessVericalAxisInput();
+        var horizontalInput = _tankMover.ProcessHorizontalAxisInput();
+        var verticalInput = _tankMover.ProcessVericalAxisInput();
+        if(!horizontalInput && !verticalInput)
+        {
+            _rigidBody.velocity = Vector3.zero;
+        }
     }
 
     private void DoCameraPivot()

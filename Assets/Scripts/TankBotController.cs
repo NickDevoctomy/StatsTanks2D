@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
 
 public class TankBotController : MonoBehaviour
 {
@@ -23,19 +21,6 @@ public class TankBotController : MonoBehaviour
 
     void Update()
     {
-        var nextPosition = _path.FirstOrDefault();
-
-        // check angle to next position
-        if(nextPosition != Vector3.zero &&
-            _facingPosition != nextPosition)
-        {
-            _tankMover.LookAt(nextPosition, true, out var _isFacingNextPosition);
-            if (_isFacingNextPosition)
-            {
-                _facingPosition = nextPosition;
-            }
-        }
-
         DoMovement();
     }
 
@@ -49,6 +34,7 @@ public class TankBotController : MonoBehaviour
             Gizmos.DrawLine(
                 transform.position,
                 firstCorner);
+            Gizmos.DrawSphere(firstCorner, 0.5f);
             for (int i = 0; i < _path.Count - 1; i++)
             {
                 var curCorner = new Vector3(_path[i].x, transform.position.y, _path[i].z);
@@ -64,23 +50,58 @@ public class TankBotController : MonoBehaviour
     private void DoMovement()
     {
         _tankMover.ForceLevel();
+        DoPathNavigation();
+    }
+
+    private void DoPathNavigation()
+    {
+        var nextPosition = _path.FirstOrDefault();
+        if (nextPosition != Vector3.zero)
+        {
+            if (_facingPosition != nextPosition)
+            {
+                _tankMover.LookAt(nextPosition, true, out var _isFacingNextPosition);
+                if (_isFacingNextPosition)
+                {
+                    Debug.Log("Finished looking at!");
+                    _facingPosition = nextPosition;
+                }
+            }
+            else
+            {
+                _tankMover.MoveTo(nextPosition, true, out var _isAtNextPosition);
+                if (_isAtNextPosition)
+                {
+                    _facingPosition = null;
+                    _path.RemoveAt(0);
+                    if (_path.Count == 0)
+                    {
+                        Debug.Log("Finished navigation!");
+                    }
+                }
+            }
+        }
     }
 
     public void CalculatePath(Vector3 targetPosition)
     {
         var navMeshPath = new NavMeshPath();
-        _navMeshAgent.CalculatePath(targetPosition, navMeshPath);
-        _path.Clear();
-        foreach(var curCorner in navMeshPath.corners)
+        if(_navMeshAgent.CalculatePath(targetPosition, navMeshPath))
         {
-            var distanceToCorner = Vector3.Distance(transform.position, curCorner);
-            if(distanceToCorner > 1f)
+            _tankMover.StopRotate();
+            _tankMover.StopMove();
+            _path.Clear();
+            foreach (var curCorner in navMeshPath.corners)
             {
-                _path.Add(curCorner);
+                var distanceToCorner = Vector3.Distance(transform.position, curCorner);
+                if (distanceToCorner > 1f)
+                {
+                    _path.Add(curCorner);
+                }
             }
-        }
 
-        _facingPosition = null;
+            _facingPosition = null;
+        }
     }
 
     public void PositionOnNavMesh()
@@ -98,13 +119,5 @@ public class TankBotController : MonoBehaviour
 
             transform.position = closestHit.position;
         }
-    }
-
-    private float GetAngleToNext(Vector3 nextCorner)
-    {
-        var forwardVector = transform.position + transform.forward * 2;
-        var side1 = forwardVector - transform.position;
-        var side2 = nextCorner - transform.position;
-        return Vector3.Angle(transform.position, nextCorner);
     }
 }

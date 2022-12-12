@@ -10,7 +10,9 @@ public class TankMover : MonoBehaviour
 
     private float? _desiredYRotation;
     private Vector3? _desiredLookAtTarget;
-    private Vector3 _lookAtTarget;
+    private Vector3? _lookAtTarget;
+    private Vector3? _desiredMoveToTarget;
+    private Vector3? _moveToTarget;
 
     void Start()
     {
@@ -27,26 +29,41 @@ public class TankMover : MonoBehaviour
         }
 
         if(_desiredLookAtTarget.HasValue)
-        { 
-            var targetRotation = Quaternion.LookRotation(_desiredLookAtTarget.GetValueOrDefault() - transform.position);
-            var str = Mathf.Min(RotationSpeed * Time.deltaTime, 1f);
-            var newRotation = Quaternion.Lerp(transform.rotation, targetRotation, str);
-            var diff = GetDiffAngle(transform.rotation, newRotation);
-            transform.rotation = newRotation;
-
-            // Correct sides are rotating but by wrong amount and looks odd.
-            if (diff < 0f)
+        {
+            var angleToNext = Angle(_desiredLookAtTarget.GetValueOrDefault());
+            if (angleToNext < 0f)
             {
-                RotateLeftWheelsByValue(Mathf.Min(str * 100f, 5f));
+                var axisAmout = Mathf.Abs(angleToNext) / 45f;
+                PerformVirtualHorizontalAxis(axisAmout > 1f ? 1f : axisAmout);
             }
             else
             {
-                RotateRightWheelsByValue(Mathf.Min(str * 100f, 5f));
+                var axisAmout = Mathf.Abs(angleToNext) / 45f;
+                PerformVirtualHorizontalAxis(axisAmout > 1f ? -1f : -axisAmout);
             }
 
-            if(Mathf.Abs(Angle(_desiredLookAtTarget.GetValueOrDefault())) < 2.0f)
+            var resultingAngle = Mathf.Abs(Angle(_desiredLookAtTarget.GetValueOrDefault()));
+            if (resultingAngle < 0.1f)
             {
+                Debug.Log($"Resulting angle = {resultingAngle}");
                 _lookAtTarget = _desiredLookAtTarget.GetValueOrDefault();
+                _desiredLookAtTarget = null;
+            }
+        }
+
+        if (_desiredMoveToTarget.HasValue)
+        {
+            var distance = Vector3.Distance(transform.position, _desiredMoveToTarget.GetValueOrDefault());
+            if (distance > 0.35f)
+            {
+                Debug.Log($"Moving to target, distance = {distance}");
+                var axisAmout = distance / 5f;
+                PerformVirtualVerticalAxis(axisAmout > 1f ? 1f : axisAmout);
+            }
+            else
+            {
+                _moveToTarget = _desiredMoveToTarget;
+                _desiredMoveToTarget = null;
                 _desiredLookAtTarget = null;
             }
         }
@@ -84,7 +101,34 @@ public class TankMover : MonoBehaviour
         isCurrentTarget = _lookAtTarget == pos;
     }
 
-    public void ProcessHorizontalAxisInput()
+    public void MoveTo(
+        Vector3 position,
+        bool forceEyeline,
+        out bool isCurrentTarget)
+    {
+        var pos = forceEyeline ?
+                new Vector3(position.x, transform.position.y, position.z) :
+                position;
+        if (_desiredMoveToTarget != pos &&
+            _moveToTarget != pos)
+        {
+            _desiredMoveToTarget = pos;
+        }
+
+        isCurrentTarget = _moveToTarget == pos;
+    }
+
+    public void StopRotate()
+    {
+        _desiredLookAtTarget = null;
+    }
+
+    public void StopMove()
+    {
+        _desiredMoveToTarget = null;
+    }
+
+    public bool ProcessHorizontalAxisInput()
     {
         var horizontalAxis = Input.GetAxis("Horizontal");
         if (horizontalAxis != 0)
@@ -100,9 +144,11 @@ public class TankMover : MonoBehaviour
                 RotateLeftWheelsByAxis("Horizontal");
             }
         }
+
+        return horizontalAxis != 0;
     }
 
-    public void ProcessVericalAxisInput()
+    public bool ProcessVericalAxisInput()
     {
         var verticalAxis = Input.GetAxis("Vertical");
         if (verticalAxis != 0)
@@ -112,6 +158,25 @@ public class TankMover : MonoBehaviour
             RotateLeftWheelsByAxis("Vertical");
             RotateRightWheelsByAxis("Vertical");
         }
+
+        return verticalAxis != 0;
+    }
+
+    private void PerformVirtualHorizontalAxis(float value)
+    {
+        var horizontalAxis = value; // Need to apply curve to this
+        var rotation = horizontalAxis * RotationSpeed;
+        _desiredYRotation = rotation;
+        RotateLeftWheelsByValue(horizontalAxis * 5.0f);
+    }
+
+    public void PerformVirtualVerticalAxis(float value)
+    {
+        var verticalAxis = value;
+        var movement = Time.deltaTime * (verticalAxis * MovementSpeed);
+        transform.Translate(new Vector3(0f, 0f, movement));
+        RotateLeftWheelsByValue(verticalAxis * 5.0f);
+        RotateRightWheelsByValue(verticalAxis * 5.0f);
     }
 
     private void RotateLeftWheelsByAxis(string axis)
@@ -121,7 +186,6 @@ public class TankMover : MonoBehaviour
 
     private void RotateLeftWheelsByValue(float value)
     {
-        Debug.Log($"Rotate left wheels by {value}");
         foreach (var curWheel in LeftWheels)
         {
             curWheel.transform.Rotate(value, 0.0f, 0.0f);
@@ -135,21 +199,9 @@ public class TankMover : MonoBehaviour
 
     private void RotateRightWheelsByValue(float value)
     {
-        Debug.Log($"Rotate right wheels by {value}");
         foreach (var curWheel in RightWheels)
         {
             curWheel.transform.Rotate(value, 0.0f, 0.0f);
         }
-    }
-
-    private float GetDiffAngle(
-        Quaternion a,
-        Quaternion b)
-    {
-        var forwardA = a * Vector3.forward;
-        var forwardB = b * Vector3.forward;
-        var angleA = Mathf.Atan2(forwardA.x, forwardA.z);
-        var angleB = Mathf.Atan2(forwardB.x, forwardB.z);
-        return Mathf.DeltaAngle(angleA, angleB);
     }
 }
