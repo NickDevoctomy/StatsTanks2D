@@ -1,6 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class TankMover : MonoBehaviour
 {
@@ -16,7 +14,6 @@ public class TankMover : MonoBehaviour
     private Vector3? _desiredLookAtTarget;
     private Vector3? _lookAtTarget;
     private Vector3? _desiredMoveToTarget;
-    private Vector3? _moveToTarget;
 
     void Start()
     {
@@ -94,23 +91,6 @@ public class TankMover : MonoBehaviour
         isCurrentTarget = _lookAtTarget == pos;
     }
 
-    public void MoveTo(
-        Vector3 position,
-        bool forceEyeline,
-        out bool isCurrentTarget)
-    {
-        var pos = forceEyeline ?
-                new Vector3(position.x, transform.position.y, position.z) :
-                position;
-        if (_desiredMoveToTarget != pos &&
-            _moveToTarget != pos)
-        {
-            _desiredMoveToTarget = pos;
-        }
-
-        isCurrentTarget = _moveToTarget == pos;
-    }
-
     public void StopRotate()
     {
         _desiredLookAtTarget = null;
@@ -123,19 +103,20 @@ public class TankMover : MonoBehaviour
 
     public bool ProcessHorizontalAxisInput()
     {
-        var horizontalAxis = Input.GetAxis("Horizontal");
+        var horizontalAxis = Input.GetAxis(Globals.HorizontalMovementInputName);
         if (horizontalAxis != 0)
         {
+            Debug.Log("Horizontal movement input detected.");
             var rotation = horizontalAxis * RotationSpeed;
             _desiredYRotation = rotation;
 
             if (horizontalAxis > 0)
             {
-                RotateRightWheelsByAxis("Horizontal");
+                RotateRightWheelsByAxis(Globals.HorizontalMovementInputName);
             }
             else
             {
-                RotateLeftWheelsByAxis("Horizontal");
+                RotateLeftWheelsByAxis(Globals.HorizontalMovementInputName);
             }
         }
 
@@ -144,13 +125,14 @@ public class TankMover : MonoBehaviour
 
     public bool ProcessVericalAxisInput()
     {
-        var verticalAxis = Input.GetAxis("Vertical");
+        var verticalAxis = Input.GetAxis(Globals.VerticalMovementInputName);
         if (verticalAxis != 0)
         {
+            Debug.Log("Vertical movement input detected.");
             var movement = Time.deltaTime * (verticalAxis * MovementSpeed);
             transform.Translate(new Vector3(0f, 0f, movement));
-            RotateLeftWheelsByAxis("Vertical");
-            RotateRightWheelsByAxis("Vertical");
+            RotateLeftWheelsByAxis(Globals.VerticalMovementInputName);
+            RotateRightWheelsByAxis(Globals.VerticalMovementInputName);
         }
 
         return verticalAxis != 0;

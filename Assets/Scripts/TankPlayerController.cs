@@ -46,8 +46,8 @@ public class TankPlayerController : MonoBehaviour
 
     private void PlayeEngineSounds()
     {
-        var verticalAxisRaw = Input.GetAxisRaw("Vertical");
-        var horizontalAxisRaw = Input.GetAxisRaw("Horizontal");
+        var verticalAxisRaw = Input.GetAxisRaw(Globals.VerticalMovementInputName);
+        var horizontalAxisRaw = Input.GetAxisRaw(Globals.HorizontalMovementInputName);
         bool hasAxisInput = verticalAxisRaw != 0 || horizontalAxisRaw != 0;
         _audioPlayer.PlayWithAttackAndRelease("Engine", hasAxisInput);
         _audioPlayer.PlayWithAttackAndRelease("EngineIdle", !hasAxisInput);
