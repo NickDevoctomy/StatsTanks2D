@@ -4,14 +4,16 @@ public class CameraController : MonoBehaviour
 {
     public float RotationSpeed = 1f;
 
-    private Camera _mainCamera;
+    private Transform _cameraYPivot;
+    private Transform _cameraXPivot;
     private float? _desiredXRotation;
     private float? _desiredYRotation;
 
     // Start is called before the first frame update
     void Start()
     {
-        _mainCamera = Camera.main;
+        _cameraYPivot = GameObject.Find("CameraYPivot")?.transform;
+        _cameraXPivot = GameObject.Find("CameraXPivot")?.transform;
     }
 
     // Update is called once per frame
@@ -22,13 +24,14 @@ public class CameraController : MonoBehaviour
 
         if (_desiredXRotation.HasValue)
         {
-            _mainCamera.transform.Rotate(new Vector3(0f, _desiredXRotation.GetValueOrDefault(), 0f));
+            _cameraYPivot.Rotate(0f, _desiredXRotation.GetValueOrDefault(), 0f, Space.Self);
             _desiredXRotation = null;
         }
 
         if (_desiredYRotation.HasValue)
         {
-            _mainCamera.transform.Rotate(new Vector3(_desiredYRotation.GetValueOrDefault(), 0f, 0f));
+
+            _cameraXPivot.Rotate(_desiredYRotation.GetValueOrDefault(), 0f, 0f, Space.Self);
             _desiredYRotation = null;
         }
     }
