@@ -11,7 +11,6 @@ public class TankPlayerController : MonoBehaviour
     private TankMover _tankMover;
     private Rigidbody _rigidBody;
     private GameObject[] _spawnPoints;
-    private Transform _cameraPivot;
     private MultiSampleAudioPlayer _audioPlayer;
 
     void Start()
@@ -21,8 +20,6 @@ public class TankPlayerController : MonoBehaviour
         _audioPlayer = GetComponent<MultiSampleAudioPlayer>();
 
         _spawnPoints = GameObject.FindGameObjectsWithTag("PlayerSpawnPoint");
-        _cameraPivot = transform.Find("CameraPivot");
-        _cameraPivot.rotation = Quaternion.Euler(StartingCameraPivot, 0, 0);
         MoveToRandomSpawnPoint();
     }
 
@@ -30,8 +27,7 @@ public class TankPlayerController : MonoBehaviour
     {
         DoMovement();
         PlayeEngineSounds();
-        DoTurretMovement();
-        DoCameraPivot();
+        //DoTurretMovement();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -61,19 +57,6 @@ public class TankPlayerController : MonoBehaviour
         if(!horizontalInput && !verticalInput)
         {
             _rigidBody.velocity = Vector3.zero;
-        }
-    }
-
-    private void DoCameraPivot()
-    {
-        if (Input.GetKey(KeyCode.PageUp))
-        {
-            _cameraPivot.Rotate(Vector3.right * 15f * Time.deltaTime);
-        }
-
-        if (Input.GetKey(KeyCode.PageDown))
-        {
-            _cameraPivot.Rotate(-Vector3.right * 15f * Time.deltaTime);
         }
     }
 
