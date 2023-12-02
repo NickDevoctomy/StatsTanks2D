@@ -1,4 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class TankMover : MonoBehaviour
 {
@@ -7,6 +9,8 @@ public class TankMover : MonoBehaviour
     public GameObject[] RightWheels;
     public float RotationSpeed = 2f;
     public float MovementSpeed = 8f;
+    public float VirtualHorizontalAxis = 0f;
+    public float VirtualVerticalAxis = 0f;
 
     private float? _desiredYRotation;
     private Vector3? _desiredLookAtTarget;
@@ -16,7 +20,6 @@ public class TankMover : MonoBehaviour
 
     void Start()
     {
-
     }
 
     void Update()
@@ -43,29 +46,19 @@ public class TankMover : MonoBehaviour
             }
 
             var resultingAngle = Mathf.Abs(Angle(_desiredLookAtTarget.GetValueOrDefault()));
-            if (resultingAngle < 0.1f)
+            if (resultingAngle < 0.15f)
             {
-                Debug.Log($"Resulting angle = {resultingAngle}");
                 _lookAtTarget = _desiredLookAtTarget.GetValueOrDefault();
                 _desiredLookAtTarget = null;
+                PerformVirtualHorizontalAxis(0f);
             }
         }
 
         if (_desiredMoveToTarget.HasValue)
         {
             var distance = Vector3.Distance(transform.position, _desiredMoveToTarget.GetValueOrDefault());
-            if (distance > 0.35f)
-            {
-                Debug.Log($"Moving to target, distance = {distance}");
-                var axisAmout = distance / 5f;
-                PerformVirtualVerticalAxis(axisAmout > 1f ? 1f : axisAmout);
-            }
-            else
-            {
-                _moveToTarget = _desiredMoveToTarget;
-                _desiredMoveToTarget = null;
-                _desiredLookAtTarget = null;
-            }
+            var axisAmout = distance / 5f;
+            PerformVirtualVerticalAxis(axisAmout > 1f ? 1f : axisAmout);
         }
     }
 
@@ -135,6 +128,7 @@ public class TankMover : MonoBehaviour
         {
             var rotation = horizontalAxis * RotationSpeed;
             _desiredYRotation = rotation;
+
             if (horizontalAxis > 0)
             {
                 RotateRightWheelsByAxis("Horizontal");
@@ -164,6 +158,7 @@ public class TankMover : MonoBehaviour
 
     private void PerformVirtualHorizontalAxis(float value)
     {
+        VirtualHorizontalAxis = value;
         var horizontalAxis = value; // Need to apply curve to this
         var rotation = horizontalAxis * RotationSpeed;
         _desiredYRotation = rotation;
@@ -172,6 +167,7 @@ public class TankMover : MonoBehaviour
 
     public void PerformVirtualVerticalAxis(float value)
     {
+        VirtualVerticalAxis = value;
         var verticalAxis = value;
         var movement = Time.deltaTime * (verticalAxis * MovementSpeed);
         transform.Translate(new Vector3(0f, 0f, movement));

@@ -98,15 +98,15 @@ public class TankPlayerController : MonoBehaviour
                 Turret.transform.rotation = Quaternion.Lerp(Turret.transform.rotation, targetRotation, str);
 
                 // Move bot, just for testing at the moment
-                if (Input.GetMouseButton(0))
-                {
-                    var botObject = GameObject.FindGameObjectWithTag("Bot");
-                    if (botObject != null)
-                    {
-                        var bot = botObject.GetComponent<TankBotController>();
-                        bot.CalculatePath(targetPosition);
-                    }
-                }
+                //if (Input.GetMouseButton(0))
+                //{
+                //    var botObject = GameObject.FindGameObjectWithTag("Bot");
+                //    if (botObject != null)
+                //    {
+                //        var bot = botObject.GetComponent<TankBotController>();
+                //        bot.CalculatePath(targetPosition);
+                //    }
+                //}
             }
         }
 

@@ -115,29 +115,6 @@ public class Map : MonoBehaviour
         meshCollider.sharedMesh = meshFilter.sharedMesh;
         combined.tag = tag;
 
-        if(includeNavMeshSurface)
-        {
-            Debug.Log($"Creating navigation mesh on {Name}");
-            var navMeshSurface = combined.AddComponent<NavMeshSurface>();
-
-            Debug.Log($"Building navigation mesh");
-            var settings = navMeshSurface.GetBuildSettings();
-            navMeshSurface.BuildNavMesh();
-
-            if(BotSpawner.Instance != null)
-            {
-                Debug.Log($"Spawning bots");
-                BotSpawner.Instance.Spawn();
-
-                Debug.Log($"Repositioning all bots onto navigation mesh");
-                BotSpawner.Instance.Bots.ForEach(x =>
-                {
-                    var bot = x.GetComponent<TankBotController>();
-                    bot.PositionOnNavMesh();
-                });
-            }
-        }
-
         combined.SetActive(true);
     }
 
