@@ -9872,7 +9872,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b53419f3094f0843bf2637a9b2d5c9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RotationSpeed: 2
+  CameraXPivot: {fileID: 8867820687537255910}
+  CameraYPivot: {fileID: 1401459671108205264}
+  RotationSpeed: 1
 --- !u!1 &4694115570497278668
 GameObject:
   m_ObjectHideFlags: 0

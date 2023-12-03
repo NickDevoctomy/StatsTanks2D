@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public GameObject CameraXPivot;
+    public GameObject CameraYPivot;
     public float RotationSpeed = 1f;
 
-    private Transform _cameraYPivot;
-    private Transform _cameraXPivot;
     private float? _desiredXRotation;
     private float? _desiredYRotation;
     private float _xMin = -65.0f;
@@ -14,8 +14,6 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _cameraYPivot = GameObject.Find("CameraYPivot")?.transform;
-        _cameraXPivot = GameObject.Find("CameraXPivot")?.transform;
     }
 
     // Update is called once per frame
@@ -26,22 +24,22 @@ public class CameraController : MonoBehaviour
 
         if (_desiredXRotation.HasValue)
         {
-            _cameraYPivot.Rotate(0f, _desiredXRotation.GetValueOrDefault(), 0f, Space.Self);
+            CameraYPivot.transform.Rotate(0f, _desiredXRotation.GetValueOrDefault(), 0f, Space.Self);
             _desiredXRotation = null;
         }
 
         if (_desiredYRotation.HasValue)
         {
-            _cameraXPivot.Rotate(_desiredYRotation.GetValueOrDefault(), 0f, 0f, Space.Self);
+            CameraXPivot.transform.Rotate(_desiredYRotation.GetValueOrDefault(), 0f, 0f, Space.Self);
 
             // Prevent rotation outside of these bounds
-            var eulerRotation = _cameraXPivot.eulerAngles;
+            var eulerRotation = CameraXPivot.transform.eulerAngles;
             float normalizedX = NormalizeAngle(eulerRotation.x);
             if (normalizedX > _xMax || normalizedX < _xMin)
             {
                 normalizedX = Mathf.Clamp(normalizedX, _xMin, _xMax);
                 eulerRotation.x = normalizedX;
-                _cameraXPivot.rotation = Quaternion.Euler(eulerRotation);
+                CameraXPivot.transform.rotation = Quaternion.Euler(eulerRotation);
             }
 
             _desiredYRotation = null;
@@ -60,7 +58,6 @@ public class CameraController : MonoBehaviour
         var horizontalAxis = Input.GetAxis(Globals.HorizontalCameraInputName);
         if (horizontalAxis != 0)
         {
-            Debug.Log("Horizontal camera input detected.");
             var rotation = horizontalAxis * RotationSpeed; 
             _desiredXRotation = rotation;
         }
@@ -73,7 +70,6 @@ public class CameraController : MonoBehaviour
         var verticalAxis = Input.GetAxis(Globals.VerticalCameraInputName);
         if (verticalAxis != 0)
         {
-            Debug.Log("Vertical camera input detected.");
             var rotation = verticalAxis * RotationSpeed;
             _desiredYRotation = rotation;
         }
