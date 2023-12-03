@@ -5,11 +5,11 @@ public class CameraController : MonoBehaviour
     public GameObject CameraXPivot;
     public GameObject CameraYPivot;
     public float RotationSpeed = 1f;
+    public float MinVerticalRotation = -65.0f;
+    public float MaxVerticalRotation = 8f;
 
     private float? _desiredXRotation;
     private float? _desiredYRotation;
-    private float _xMin = -65.0f;
-    private float _xMax = 8f;
 
     // Start is called before the first frame update
     void Start()
@@ -35,9 +35,9 @@ public class CameraController : MonoBehaviour
             // Prevent rotation outside of these bounds
             var eulerRotation = CameraXPivot.transform.eulerAngles;
             float normalizedX = NormalizeAngle(eulerRotation.x);
-            if (normalizedX > _xMax || normalizedX < _xMin)
+            if (normalizedX > MaxVerticalRotation || normalizedX < MinVerticalRotation)
             {
-                normalizedX = Mathf.Clamp(normalizedX, _xMin, _xMax);
+                normalizedX = Mathf.Clamp(normalizedX, MinVerticalRotation, MaxVerticalRotation);
                 eulerRotation.x = normalizedX;
                 CameraXPivot.transform.rotation = Quaternion.Euler(eulerRotation);
             }
