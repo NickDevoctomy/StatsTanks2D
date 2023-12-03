@@ -73,14 +73,14 @@ public class TankPlayerController : MonoBehaviour
         if (gamepad == null) return; // Exit if no gamepad is connected
 
         var rotationSpeed = 20f;
-        var leftTrigger = Gamepad.current[GamepadButton.LeftTrigger];
+        var leftTrigger = Gamepad.current[GamepadButton.LeftShoulder];
         if (leftTrigger.IsPressed())
         {
             _currentCanonAngle = Mathf.Clamp(_currentCanonAngle - rotationSpeed * Time.deltaTime, -45, 20);
             _canon.localEulerAngles = new Vector3(_currentCanonAngle, _canon.localEulerAngles.y, _canon.localEulerAngles.z);
         }
 
-        var rightTrigger = Gamepad.current[GamepadButton.RightTrigger];
+        var rightTrigger = Gamepad.current[GamepadButton.RightShoulder];
         if (rightTrigger.IsPressed())
         {
             _currentCanonAngle = Mathf.Clamp(_currentCanonAngle + rotationSpeed * Time.deltaTime, -45, 20);
