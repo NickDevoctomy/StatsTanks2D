@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 public class TankPlayerController : MonoBehaviour
 {
@@ -13,11 +15,16 @@ public class TankPlayerController : MonoBehaviour
     private GameObject[] _spawnPoints;
     private MultiSampleAudioPlayer _audioPlayer;
 
+    private Transform _canon;
+    private float _currentCanonAngle = 0f;
+
     void Start()
     {
         _tankMover = GetComponent<TankMover>();
         _rigidBody = GetComponent<Rigidbody>();
         _audioPlayer = GetComponent<MultiSampleAudioPlayer>();
+
+        _canon = transform.Find("TankFree_Blue/TankFree_Tower/TankFree_Canon");
 
         _spawnPoints = GameObject.FindGameObjectsWithTag("PlayerSpawnPoint");
         MoveToRandomSpawnPoint();
@@ -27,7 +34,7 @@ public class TankPlayerController : MonoBehaviour
     {
         DoMovement();
         PlayeEngineSounds();
-        //DoTurretMovement();
+        DoTurretMovement();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -62,7 +69,27 @@ public class TankPlayerController : MonoBehaviour
 
     private void DoTurretMovement()
     {
-        var moved = false;
+        var gamepad = Gamepad.current;
+        if (gamepad == null) return; // Exit if no gamepad is connected
+
+        var rotationSpeed = 20f;
+        var leftTrigger = Gamepad.current[GamepadButton.LeftTrigger];
+        if (leftTrigger.IsPressed())
+        {
+            _currentCanonAngle = Mathf.Clamp(_currentCanonAngle - rotationSpeed * Time.deltaTime, -45, 20);
+            _canon.localEulerAngles = new Vector3(_currentCanonAngle, _canon.localEulerAngles.y, _canon.localEulerAngles.z);
+        }
+
+        var rightTrigger = Gamepad.current[GamepadButton.RightTrigger];
+        if (rightTrigger.IsPressed())
+        {
+            _currentCanonAngle = Mathf.Clamp(_currentCanonAngle + rotationSpeed * Time.deltaTime, -45, 20);
+            _canon.localEulerAngles = new Vector3(_currentCanonAngle, _canon.localEulerAngles.y, _canon.localEulerAngles.z);
+        }
+
+
+        // Mouse aiming
+        /*var moved = false;
         var cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(cameraRay, out var cameraRayHit))
         {
@@ -79,21 +106,10 @@ public class TankPlayerController : MonoBehaviour
 
                 var str = Mathf.Min(2.0f * Time.deltaTime, 1);
                 Turret.transform.rotation = Quaternion.Lerp(Turret.transform.rotation, targetRotation, str);
-
-                // Move bot, just for testing at the moment
-                //if (Input.GetMouseButton(0))
-                //{
-                //    var botObject = GameObject.FindGameObjectWithTag("Bot");
-                //    if (botObject != null)
-                //    {
-                //        var bot = botObject.GetComponent<TankBotController>();
-                //        bot.CalculatePath(targetPosition);
-                //    }
-                //}
             }
         }
 
-        _audioPlayer.PlayWithAttackAndRelease("Turret", moved);
+        _audioPlayer.PlayWithAttackAndRelease("Turret", moved);*/
     }
 
     private void MoveToRandomSpawnPoint()
