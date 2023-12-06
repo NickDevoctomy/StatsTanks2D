@@ -41,6 +41,11 @@ public class MultiSampleAudioPlayer : MonoBehaviour
         string key,
         bool active)
     {
+        if (_contexts == null)
+        {
+            return;
+        }
+
         if (!_contexts.ContainsKey(key))
         {
             return;
