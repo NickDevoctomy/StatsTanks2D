@@ -5,7 +5,7 @@ public class TankMover : MonoBehaviour
     public GameObject Turret;
     public GameObject[] LeftWheels;
     public GameObject[] RightWheels;
-    public float RotationSpeed = 2f;
+    public float RotationSpeed = 0.2f;
     public float MovementSpeed = 8f;
     public float VirtualHorizontalAxis = 0f;
     public float VirtualVerticalAxis = 0f;

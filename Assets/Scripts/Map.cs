@@ -76,8 +76,7 @@ public class Map : MonoBehaviour
                 cellGroupInfo.Key,
                 generated,
                 cellGroupInfo.Material,
-                generated[0].tag,
-                cellGroupInfo.IncludeNavMeshSurface);
+                generated[0].tag);
         }
         else
         {
@@ -95,8 +94,7 @@ public class Map : MonoBehaviour
         string Name,
         List<GameObject> cells,
         Material material,
-        string tag,
-        bool includeNavMeshSurface)
+        string tag)
     {
         var combineInstances = cells.Select(x => CreateCombineInstanceFromGameObject(x)).ToArray();
         cells.ForEach(x => DestroyImmediate(x));
