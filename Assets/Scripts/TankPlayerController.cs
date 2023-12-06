@@ -74,10 +74,12 @@ public class TankPlayerController : MonoBehaviour
 
         var rotationSpeed = 20f;
         var leftTrigger = Gamepad.current[GamepadButton.LeftShoulder];
+        var playSound = false;
         if (leftTrigger.IsPressed())
         {
             _currentCanonAngle = Mathf.Clamp(_currentCanonAngle - rotationSpeed * Time.deltaTime, -45, 20);
             _canon.localEulerAngles = new Vector3(_currentCanonAngle, _canon.localEulerAngles.y, _canon.localEulerAngles.z);
+            playSound = _currentCanonAngle > -45;
         }
 
         var rightTrigger = Gamepad.current[GamepadButton.RightShoulder];
@@ -85,8 +87,10 @@ public class TankPlayerController : MonoBehaviour
         {
             _currentCanonAngle = Mathf.Clamp(_currentCanonAngle + rotationSpeed * Time.deltaTime, -45, 20);
             _canon.localEulerAngles = new Vector3(_currentCanonAngle, _canon.localEulerAngles.y, _canon.localEulerAngles.z);
+            playSound = _currentCanonAngle < 20;
         }
 
+        _audioPlayer.PlayWithAttackAndRelease("Turret", playSound);
 
         // Mouse aiming
         /*var moved = false;
