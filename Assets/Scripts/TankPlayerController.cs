@@ -12,7 +12,6 @@ public class TankPlayerController : MonoBehaviour
 
     private TankMover _tankMover;
     private Rigidbody _rigidBody;
-    private GameObject[] _spawnPoints;
     private MultiSampleAudioPlayer _audioPlayer;
 
     private Transform _canon;
@@ -25,9 +24,6 @@ public class TankPlayerController : MonoBehaviour
         _audioPlayer = GetComponent<MultiSampleAudioPlayer>();
 
         _canon = transform.Find("TankFree_Blue/TankFree_Tower/TankFree_Canon");
-
-        _spawnPoints = GameObject.FindGameObjectsWithTag("PlayerSpawnPoint");
-        MoveToRandomSpawnPoint();
     }
 
     void FixedUpdate()
@@ -114,11 +110,5 @@ public class TankPlayerController : MonoBehaviour
         }
 
         _audioPlayer.PlayWithAttackAndRelease("Turret", moved);*/
-    }
-
-    private void MoveToRandomSpawnPoint()
-    {
-        var randomSpawnPointIndex = Random.Range(0, _spawnPoints.Length - 1);
-        transform.position = _spawnPoints[randomSpawnPointIndex].transform.position;
     }
 }
