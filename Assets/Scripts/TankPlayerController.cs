@@ -66,20 +66,20 @@ public class TankPlayerController : MonoBehaviour
     private void DoTurretMovement()
     {
         var gamepad = Gamepad.current;
-        if (gamepad == null) return; // Exit if no gamepad is connected
 
         var rotationSpeed = 20f;
-        var leftTrigger = Gamepad.current[GamepadButton.LeftShoulder];
+        var leftTrigger = gamepad?[GamepadButton.LeftShoulder];
         var playSound = false;
-        if (leftTrigger.IsPressed())
+        var turretKey = Input.GetAxis("Turret");
+        if ((leftTrigger != null && leftTrigger.IsPressed()) || turretKey > 0)
         {
             _currentCanonAngle = Mathf.Clamp(_currentCanonAngle - rotationSpeed * Time.deltaTime, -45, 20);
             _canon.localEulerAngles = new Vector3(_currentCanonAngle, _canon.localEulerAngles.y, _canon.localEulerAngles.z);
             playSound = _currentCanonAngle > -45;
         }
 
-        var rightTrigger = Gamepad.current[GamepadButton.RightShoulder];
-        if (rightTrigger.IsPressed())
+        var rightTrigger = gamepad?[GamepadButton.RightShoulder];
+        if ((rightTrigger != null && rightTrigger.IsPressed()) || turretKey < 0)
         {
             _currentCanonAngle = Mathf.Clamp(_currentCanonAngle + rotationSpeed * Time.deltaTime, -45, 20);
             _canon.localEulerAngles = new Vector3(_currentCanonAngle, _canon.localEulerAngles.y, _canon.localEulerAngles.z);
