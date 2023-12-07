@@ -106,7 +106,7 @@ public class TankMover : MonoBehaviour
         var horizontalAxis = Input.GetAxis(Globals.HorizontalMovementInputName);
         if (horizontalAxis != 0)
         {
-            Debug.Log("Horizontal movement input detected.");
+            Debug.Log($"Horizontal movement input detected - {horizontalAxis}.");
             var rotation = horizontalAxis * RotationSpeed;
             _desiredYRotation = rotation;
 
@@ -128,7 +128,7 @@ public class TankMover : MonoBehaviour
         var verticalAxis = Input.GetAxis(Globals.VerticalMovementInputName);
         if (verticalAxis != 0)
         {
-            Debug.Log("Vertical movement input detected.");
+            Debug.Log($"Vertical movement input detected - {verticalAxis}.");
             var movement = Time.deltaTime * (verticalAxis * MovementSpeed);
             transform.Translate(new Vector3(0f, 0f, movement));
             RotateLeftWheelsByAxis(Globals.VerticalMovementInputName);
