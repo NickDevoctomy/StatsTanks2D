@@ -59,7 +59,7 @@ public class TankPlayerController : MonoBehaviour
         var verticalInput = _tankMover.ProcessVericalAxisInput();
         if(!horizontalInput && !verticalInput)
         {
-            _rigidBody.velocity = Vector3.zero;
+            _rigidBody.linearVelocity = Vector3.zero;
         }
     }
 
